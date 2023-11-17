@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<!---Coding By CodingLab | www.codinglabweb.com--->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Admissions</title>
+    <!---Custom CSS File--->
+    <link rel="stylesheet" href="./style.css" />
+	
+  </head>
+  <body>
+    <section class="container">
+      <header>Tech-Hub Registration</header>
+      <center><p>Online Admission Portal</p></center>
+      <hr>
+      
+	  <p style="color:red; margin-top:10px;">NOTE! All Fields are Mendotary</p>
+      <form action="db_connect.php" class="form" id="myForm" method="POST">
+        <div class="input-box">
+          <label>Full Name</label>
+          <input type="text" placeholder="Enter full name" name="name" required />
+        </div>
+		 <div class="input-box">
+          <label>Father Name</label>
+          <input type="text" placeholder="Enter Father Name" name="fname" required />
+        </div>
+		 <div class="input-box">
+          <label>Enter CNIC</label>
+          <input type="text" placeholder="Enter 13 Digits CNIC" id="cnic" name="cnic"  required />
+		   <span id="cnicError" style="color: red; display: none;">CNIC should be a 13-digit numeric value.</span>
+        </div>
+
+        <div class="column">
+          <div class="input-box">
+            <label>Phone Number (Must be on WhatsApp)</label>
+            <input type="number" placeholder="Enter phone number" name="phone" id="phone" required />
+          </div>
+          <div class="input-box">
+            <label>Birth Date</label>
+            <input type="date" placeholder="Enter birth date" name="dob" id="dob" required />
+          </div>
+        </div>
+        <div class="gender-box">
+          <h3>Gender</h3>
+          <div class="gender-option">
+            <div class="gender">
+              <input type="radio" id="check-male" name="gender" value="male" checked />
+              <label for="check-male">Male</label>
+            </div>
+            <div class="gender">
+              <input type="radio" id="check-female" name="gender" value="female" />
+              <label for="check-female">Female</label>
+            </div>
+            <div class="gender">
+              <input type="radio" id="check-other" name="gender" value="other" />
+              <label for="check-other">prefer not to say</label>
+            </div>
+          </div>
+        </div>
+        <div class="input-box address">
+          <label>Address</label>
+          <input type="text" placeholder="Enter Your Address" name="address" required />
+          	<div class="select-box" >
+              <select name="degree" required>
+              <option disabled value="" selected hidden>Select Your Qualification</option>
+				<option value="Matric">Matric</option>
+				<option value="Inter">Intermediate</option>
+				<option value="Graduation-2 Years">BA/BSc.</option>
+				<option value="Graduation-4 Years">BS/MA/MSc</option> 
+				<option value="M.Phill">MS/M.Phil</option> 
+              </select>
+        </div>
+          <div class="column">
+            <div class="select-box">
+                              <select name="city" id="city" required>
+                    <option disabled value="" selected hidden>Select Campus</option>
+                    <!-- City options will be populated dynamically using JavaScript -->
+                </select>
+        </div>
+					 
+		</div>
+			<div class="select-box" >
+
+             <select name="firstp" id="firstp" required>
+                <option disabled value="" selected hidden>Select First Prefrence</option>
+            
+              </select>
+        </div>
+		<div class="select-box" >
+              <select name="info" required>
+              <option disabled value="" selected hidden>How You Was Informed About Us</option>
+				<option value="Facebook PMYDP">Facebook</option>
+				<option value="Flyer PMYDP">Flyer & Poster</option>
+				<option value="Alumni PMYDP">Old Student</option>
+				<option value="Faculty PMYDP">Faculty Member</option> 
+              </select>
+        </div>
+		</div>
+        <button>Submit</button>
+      </form>
+    </section>
+	 <script>
+        // JavaScript code to populate the "City" select box when the page loads
+        document.addEventListener('DOMContentLoaded', function () {
+            var citySelect = document.getElementById('city');
+            
+            // Fetch campus data from the server using AJAX
+            fetch('fetch_campuses.php')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(campus => {
+                        var option = document.createElement('option');
+                        option.value = campus.campus_name;
+                        option.textContent = campus.campus_name;
+                        citySelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching campus data:', error);
+                });
+        });
+
+        // JavaScript code to dynamically populate the "First Preference" select box
+        document.getElementById('city').addEventListener('change', function () {
+            var selectedCampusId = this.value;
+            var firstPreferenceSelect = document.getElementById('firstp');
+
+            // Clear previous options
+            firstPreferenceSelect.innerHTML = '<option disabled value="" selected hidden>Select Course</option>';
+
+            // Fetch course data for the selected campus using AJAX
+            fetch('fetch_courses.php?campus_id=' + selectedCampusId)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(course => {
+                        var option = document.createElement('option');
+                        option.value = course.name;
+                        option.textContent = course.name;
+                        firstPreferenceSelect.appendChild(option);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching course data:', error);
+                });
+        });
+    </script>
+<script src="validate.js"></script>
+
+	
+  </body>
+</html>
+  
+
+
+
+
+
+
+
+  
+	
